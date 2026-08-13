@@ -466,5 +466,122 @@ def delete_workout_entry(id):
     return "", 204
 
 
+@app.get("/exercises")
+def get_exercises():
+    exercises = Exercise.query.order_by(Exercise.name).all()
+
+    return [
+        {
+            "id": exercise.id,
+            "name": exercise.name,
+            "category": exercise.category
+        }
+        for exercise in exercises
+    ], 200
+
+@app.get("/exercises/<int:id>")
+def get_exercise_by_id(id):
+    exercise = db.session.get(Exercise, id)
+
+    if not exercise:
+        return {"error": "Exercise not found"}, 404
+
+    return {
+        "id": exercise.id,
+        "name": exercise.name,
+        "category": exercise.category
+    }, 200
+
+
+@app.post("/exercises")
+def create_exercise():
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    data = request.get_json() or {}
+
+    try:
+        exercise = Exercise(
+            name=data.get("name"),
+            category=data.get("category")
+        )
+
+        db.session.add(exercise)
+        db.session.commit()
+
+        return {
+            "id": exercise.id,
+            "name": exercise.name,
+            "category": exercise.category
+        }, 201
+
+    except Exception as error:
+        db.session.rollback()
+
+        return {
+            "errors": [str(error)]
+        }, 422
+
+@app.patch("/exercises/<int:id>")
+def update_exercise(id):
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    exercise = db.session.get(Exercise, id)
+
+    if not exercise:
+        return {"error": "Exercise not found"}, 404
+
+    data = request.get_json() or {}
+
+    try:
+        if "name" in data:
+            exercise.name = data["name"]
+
+        if "category" in data:
+            exercise.category = data["category"]
+
+        db.session.commit()
+
+        return {
+            "id": exercise.id,
+            "name": exercise.name,
+            "category": exercise.category
+        }, 200
+
+    except Exception as error:
+        db.session.rollback()
+
+        return {
+            "errors": [str(error)]
+        }, 422
+
+@app.delete("/exercises/<int:id>")
+def delete_exercise(id):
+    user = get_current_user()
+
+    if not user:
+        return {"error": "Unauthorized"}, 401
+
+    exercise = db.session.get(Exercise, id)
+
+    if not exercise:
+        return {"error": "Exercise not found"}, 404
+
+    if exercise.workout_entries:
+        return {
+            "error": "Cannot delete an exercise used in workout entries."
+        }, 409
+
+    db.session.delete(exercise)
+    db.session.commit()
+
+    return "", 204
+
+
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
