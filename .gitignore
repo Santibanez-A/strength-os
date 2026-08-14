@@ -6,3 +6,5 @@ node_modules/
 dist/server/cookies*.txt
 server/cookies.txt
 server/cookies2.txt
+cookies.txt
+client/*cookies*.txt
