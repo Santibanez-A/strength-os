@@ -12,7 +12,7 @@ function App() {
   const [checkingSession, setCheckingSession] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5555", {
+    fetch("http://localhost:5555/check_session", {
       credentials: "include",
     })
       .then((response) => {

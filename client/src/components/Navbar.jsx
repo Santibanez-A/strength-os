@@ -4,15 +4,21 @@ function Navbar({ user, setUser }) {
   const navigate = useNavigate();
 
   function handleLogout() {
-    fetch("http://localhost:5555", {
+    fetch("http://localhost:5555/logout", {
       method: "DELETE",
       credentials: "include",
-    }).then((response) => {
-      if (response.ok) {
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Logout failed");
+        }
+
         setUser(null);
         navigate("/login");
-      }
-    });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (

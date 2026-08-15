@@ -12,7 +12,7 @@ function Signup({ setUser }) {
     event.preventDefault();
     setError("");
 
-    fetch("http://localhost:5555", {
+    fetch("http://localhost:5555/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
