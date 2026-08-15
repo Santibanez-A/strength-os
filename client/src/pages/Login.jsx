@@ -11,7 +11,7 @@ function Login({ setUser }) {
     event.preventDefault();
     setError("");
 
-    fetch("http://localhost:5555/login", {
+    fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

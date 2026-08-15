@@ -4,7 +4,7 @@ function Navbar({ user, setUser }) {
   const navigate = useNavigate();
 
   function handleLogout() {
-    fetch("http://localhost:5555/logout", {
+    fetch("/api/logout", {
       method: "DELETE",
       credentials: "include",
     })

@@ -14,6 +14,7 @@ CORS(
     origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
+        "http://172.31.11.118:5173",
     ],
 )
 
@@ -587,4 +588,8 @@ def delete_exercise(id):
 
 
 if __name__ == "__main__":
-    app.run(port=5555, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5555,
+        debug=True
+    )

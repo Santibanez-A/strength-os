@@ -5,6 +5,7 @@ function Dashboard({ user }) {
   const [error, setError] = useState("");
 
   const [date, setDate] = useState("");
+  const [durationHours, setDurationHours] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -17,8 +18,10 @@ function Dashboard({ user }) {
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
   const [rir, setRir] = useState("");
+
+
   useEffect(() => {
-    fetch("http://localhost:5555/workouts", {
+    fetch("/api/workouts", {
       credentials: "include",
     })
       .then((response) => {
@@ -37,7 +40,7 @@ function Dashboard({ user }) {
   }, []);
 
   useEffect(() => {
-  fetch("http://localhost:5555/exercises")
+  fetch("/api/exercises")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Unable to load exercises");
@@ -52,7 +55,7 @@ function Dashboard({ user }) {
       setError(error.message);
     });
 
-  fetch("http://localhost:5555/workout_entries", {
+  fetch("/api/workout_entries", {
     credentials: "include",
   })
     .then((response) => {
@@ -74,7 +77,7 @@ function Dashboard({ user }) {
     event.preventDefault();
     setError("");
 
-    fetch("http://localhost:5555/workouts", {
+    fetch("/api/workouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -82,10 +85,12 @@ function Dashboard({ user }) {
       credentials: "include",
       body: JSON.stringify({
         date,
-        duration_minutes: Number(durationMinutes),
-        notes,
-      }),
-    })
+        duration_minutes:
+          Number(durationHours || 0) * 60 +
+          Number(durationMinutes || 0),
+          notes,
+        }),
+      })
       .then((response) => {
         if (!response.ok) {
           return response.json().then((data) => {
@@ -104,6 +109,7 @@ function Dashboard({ user }) {
         ]);
 
         setDate("");
+        setDurationHours("");
         setDurationMinutes("");
         setNotes("");
       })
@@ -116,7 +122,7 @@ function Dashboard({ user }) {
   event.preventDefault();
   setError("");
 
-  fetch("http://localhost:5555/workout_entries", {
+  fetch("/api/workout_entries", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -189,7 +195,7 @@ function handleUpdateEntry(entry) {
 
   if (newRir === null) return;
 
-  fetch(`http://localhost:5555/workout_entries/${entry.id}`, {
+  fetch(`/api/workout_entries/${entry.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -230,7 +236,7 @@ function handleDeleteEntry(id) {
 
   if (!confirmed) return;
 
-  fetch(`http://localhost:5555/workout_entries/${id}`, {
+  fetch(`/api/workout_entries/${id}`, {
     method: "DELETE",
     credentials: "include",
   })
@@ -265,7 +271,7 @@ function handleUpdateWorkout(workout) {
 
   if (newNotes == null) return;
 
-  fetch(`http://localhost:5555/workouts/${workout.id}`, {
+  fetch(`/api/workouts/${workout.id}`, {
     method:"PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -304,7 +310,7 @@ function handleDeleteWorkout(id) {
 
   if (!confirmed) return;
 
-  fetch(`http://localhost:5555/workouts/${id}`,{
+  fetch(`/api/workouts/${id}`,{
     method: "DELETE",
     credentials: "include",
   })
@@ -323,6 +329,21 @@ function handleDeleteWorkout(id) {
     setError(error.message);
   });
 }
+function formatDuration(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours === 0) {
+    return `${minutes} min`;
+  }
+
+  if (minutes === 0) {
+    return `${hours} hr`;
+  }
+
+  return `${hours} hr ${minutes} min`;
+}
+
 return (
   <main>
     <h1>Dashboard</h1>
@@ -343,18 +364,34 @@ return (
           />
         </label>
 
-        <label>
-          Duration (minutes)
-          <input
-            type="number"
-            min="1"
-            value={durationMinutes}
-            onChange={(event) =>
-              setDurationMinutes(event.target.value)
-            }
-            required
-          />
-        </label>
+<div className="duration-fields">
+  <label>
+    Hours
+    <input
+      type="number"
+      min="0"
+      value={durationHours}
+      onChange={(event) =>
+        setDurationHours(event.target.value)
+      }
+      placeholder="0"
+    />
+  </label>
+
+  <label>
+    Minutes
+    <input
+      type="number"
+      min="0"
+      max="59"
+      value={durationMinutes}
+      onChange={(event) =>
+        setDurationMinutes(event.target.value)
+      }
+      placeholder="0"
+    />
+  </label>
+</div>
 
         <label>
           Notes
@@ -496,7 +533,7 @@ return (
             <h3>{workout.date}</h3>
 
             <p>
-              Duration: {workout.duration_minutes} minutes
+             Duration: {formatDuration(workout.duration_minutes)}
             </p>
 
             <p>{workout.notes}</p>

@@ -1,111 +1,547 @@
+/* ================================
+   STRENGTHOS
+   Military / Tactical UI Theme
+   ================================ */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  font-family: "Segoe UI", Arial, sans-serif;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Core palette */
+  --black: #0b0d0c;
+  --black-soft: #111411;
+  --charcoal: #171a17;
+  --charcoal-light: #20241e;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --od-green: #4b5320;
+  --od-green-light: #626c2b;
+  --od-green-dark: #343a16;
+
+  --tan: #c2a66b;
+  --tan-light: #d8c28d;
+  --tan-dark: #947a48;
+
+  --text: #e4dcc8;
+  --text-muted: #aaa38f;
+
+  --border: #55583a;
+  --danger: #7a4035;
+  --danger-hover: #955044;
+
   color: var(--text);
-  background: var(--bg);
+  background: var(--black);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+/* ================================
+   GLOBAL
+   ================================ */
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--black);
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      135deg,
+      #090b09 0%,
+      #10130f 50%,
+      #090b09 100%
+    );
+
+  color: var(--text);
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+}
+
+/* ================================
+   NAVIGATION
+   ================================ */
+
+nav {
+  min-height: 72px;
+  padding: 0 36px;
+
+  display: flex;
+  align-items: center;
+  gap: 24px;
+
+  background: #090b09;
+
+  border-bottom: 2px solid var(--tan-dark);
+
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.45);
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav a:first-child {
+  margin-right: auto;
+
+  color: var(--tan);
+
+  font-size: 1.35rem;
+  font-weight: 900;
+
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+nav span {
+  color: var(--tan-light);
+  font-size: 0.9rem;
+}
+
+nav button {
+  padding: 9px 16px;
+
+  color: #111;
+  background: var(--tan);
+
+  border: 1px solid var(--tan-light);
+  border-radius: 4px;
+
+  font-weight: 800;
+  text-transform: uppercase;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+nav button:hover {
+  background: var(--tan-light);
+  transform: translateY(-1px);
+}
+
+/* ================================
+   MAIN PAGE
+   ================================ */
+
+main {
+  width: min(1180px, calc(100% - 40px));
+
   margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
+
+  padding: 45px 0 80px;
+}
+
+main > h1 {
+  margin: 0;
+
+  color: var(--tan);
+
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 900;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+main > h1 + p {
+  margin: 8px 0 0;
+
+  color: var(--text-muted);
+}
+
+/* ================================
+   SECTIONS
+   ================================ */
+
+section {
+  margin-top: 30px;
+
+  background: var(--black-soft);
+
+  border: 1px solid var(--border);
+  border-radius: 5px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.28);
+}
+
+section > h2 {
+  margin: 0;
+
+  padding: 14px 20px;
+
+  color: var(--tan-light);
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--od-green-dark),
+      var(--od-green)
+    );
+
+  border-bottom: 1px solid var(--border);
+
+  font-size: 1.15rem;
+  font-weight: 900;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Give content inside sections breathing room */
+
+section > form {
+  margin: 22px;
+}
+
+section > article {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+section > p {
+  margin: 22px;
+}
+
+/* ================================
+   FORMS
+   ================================ */
+
+form {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+label {
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
+  gap: 7px;
+
+  color: var(--tan-light);
+
+  font-size: 0.78rem;
+  font-weight: 800;
+
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+.duration-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+input,
+textarea,
+select {
+  width: 100%;
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
-}
+  padding: 12px 13px;
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
+  color: var(--text);
+
+  background: #0d100e;
+
+  border: 1px solid #4a4d3a;
   border-radius: 4px;
-  color: var(--text-h);
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--tan);
+
+  box-shadow:
+    0 0 0 2px rgba(194, 166, 107, 0.12);
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Notes gets more horizontal space */
+
+form label:has(textarea) {
+  grid-column: 1 / -1;
+}
+
+/* ================================
+   PRIMARY FORM BUTTONS
+   ================================ */
+
+form button {
+  width: fit-content;
+
+  padding: 11px 18px;
+
+  color: var(--tan-light);
+
+  background:
+    linear-gradient(
+      180deg,
+      var(--od-green-light),
+      var(--od-green)
+    );
+
+  border: 1px solid #727942;
+  border-radius: 4px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+form button:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #737d34,
+      var(--od-green-light)
+    );
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* ================================
+   WORKOUT / ENTRY CARDS
+   ================================ */
+
+article {
+  position: relative;
+
+  margin-top: 14px;
+  padding: 18px 20px;
+
+  color: var(--text);
+
+  background:
+    linear-gradient(
+      90deg,
+      #1b1e19,
+      #111411
+    );
+
+  border: 1px solid #3e4233;
+  border-left: 4px solid var(--od-green-light);
+
+  border-radius: 4px;
+
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+article:last-child {
+  margin-bottom: 22px;
+}
+
+article:hover {
+  transform: translateY(-1px);
+
+  border-color: #676a49;
+
+  background:
+    linear-gradient(
+      90deg,
+      #20241d,
+      #131613
+    );
+}
+
+article h3 {
+  margin: 0 0 10px;
+
+  color: var(--tan-light);
+
+  font-size: 1.1rem;
+  font-weight: 900;
+
+  letter-spacing: 0.5px;
+}
+
+article p {
+  margin: 6px 0;
+
+  color: var(--text-muted);
+
+  font-size: 0.93rem;
+}
+
+/* ================================
+   EDIT / DELETE BUTTONS
+   ================================ */
+
+article button {
+  margin-top: 12px;
+  margin-right: 8px;
+
+  padding: 8px 14px;
+
+  color: var(--tan-light);
+
+  background: var(--od-green);
+
+  border: 1px solid var(--od-green-light);
+  border-radius: 3px;
+
+  font-size: 0.78rem;
+  font-weight: 900;
+
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+article button:hover {
+  background: var(--od-green-light);
+  transform: translateY(-1px);
+}
+
+/* Last button = delete */
+
+article button:last-child {
+  color: #17130c;
+
+  background: var(--tan);
+
+  border-color: var(--tan-light);
+}
+
+article button:last-child:hover {
+  background: var(--tan-light);
+}
+
+/* ================================
+   ERRORS
+   ================================ */
+
+main > p:not(:first-of-type) {
+  margin-top: 20px;
+
+  padding: 12px 15px;
+
+  color: #f2d5cf;
+
+  background: rgba(122, 64, 53, 0.25);
+
+  border-left: 4px solid var(--danger);
+}
+
+/* ================================
+   SCROLLBAR
+   ================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--od-green);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--od-green-light);
+}
+
+/* ================================
+   MOBILE
+   ================================ */
+
+@media (max-width: 750px) {
+  nav {
+    min-height: 64px;
+
+    padding: 12px 16px;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+  }
+
+  nav a:first-child {
+    width: 100%;
+  }
+
+  main {
+    width: calc(100% - 24px);
+
+    padding-top: 30px;
+  }
+
+  main > h1 {
+    font-size: 2rem;
+  }
+
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  form label:has(textarea) {
+    grid-column: auto;
+  }
+
+  section > form {
+    margin: 16px;
+  }
+
+  section > article {
+    margin-left: 16px;
+    margin-right: 16px;
+  }
 }
