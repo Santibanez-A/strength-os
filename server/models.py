@@ -27,7 +27,7 @@ class User(db.Model):
         return value.strip()
 
     def set_password(self, password):
-        if not password or len(password) < 0:
+        if not password or len(password) < 6:
             raise ValueError(
                 "Password must be at least 6 characters."
             )
@@ -98,7 +98,7 @@ class Exercise(db.Model):
 
     #validation
     @validates("name")
-    def valdiate_name(self, key, name):
+    def validate_name(self, key, name):
         if not name or not name.strip():
             raise ValueError(
                 "Exercise name required."
@@ -113,7 +113,7 @@ class WorkoutEntry(db.Model):
     weight = db.Column(db.Float, nullable=False)
     sets = db.Column(db.Integer, nullable=False)
     reps = db.Column(db.Integer, nullable=False)
-    rir = db.Column(db.Integer, nullable=False)
+    rir = db.Column(db.Integer, nullable=True)
 
     #foreignKey
     workout_id = db.Column(db.Integer, db.ForeignKey("workouts.id"), nullable=False)
