@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import WorkoutCard from "../components/WorkoutCard";
 import WorkoutEntryCard from "../components/WorkoutEntryCard";
+import WorkoutForm from "../components/WorkoutForm";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
   const [error, setError] = useState("");
-
-  const [date, setDate] = useState("");
-  const [durationHours, setDurationHours] = useState("");
-  const [durationMinutes, setDurationMinutes] = useState("");
-  const [notes, setNotes] = useState("");
 
   const [exercises, setExercises] = useState([]);
   const [entries, setEntries] = useState([]);
@@ -74,51 +70,6 @@ function Dashboard({ user }) {
       setError(error.message);
     });
 }, []);  
-
-  function handleCreateWorkout(event) {
-    event.preventDefault();
-    setError("");
-
-    fetch("/api/workouts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        date,
-        duration_minutes:
-          Number(durationHours || 0) * 60 +
-          Number(durationMinutes || 0),
-          notes,
-        }),
-      })
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((data) => {
-            throw new Error(
-              data.errors?.[0] || "Unable to create workout"
-            );
-          });
-        }
-
-        return response.json();
-      })
-      .then((newWorkout) => {
-        setWorkouts((currentWorkouts) => [
-          ...currentWorkouts,
-          newWorkout,
-        ]);
-
-        setDate("");
-        setDurationHours("");
-        setDurationMinutes("");
-        setNotes("");
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
-  }
 
   function handleCreateEntry(event) {
   event.preventDefault();
@@ -346,68 +297,27 @@ function formatDuration(totalMinutes) {
   return `${hours} hr ${minutes} min`;
 }
 
+function handleWorkoutCreated(newWorkout) {
+  setWorkouts((currentWorkouts) => [
+    ...currentWorkouts,
+    newWorkout,
+  ]);
+}
+
+function handleFormError(message) {
+  setError(message);
+}
+
 return (
   <main>
     <h1>Dashboard</h1>
     <p>Welcome, {user.username}</p>
 
     {/* CREATE WORKOUT */}
-    <section>
-      <h2>Create Workout</h2>
-
-      <form onSubmit={handleCreateWorkout}>
-        <label>
-          Date
-          <input
-            type="date"
-            value={date}
-            onChange={(event) => setDate(event.target.value)}
-            required
-          />
-        </label>
-
-<div className="duration-fields">
-  <label>
-    Hours
-    <input
-      type="number"
-      min="0"
-      value={durationHours}
-      onChange={(event) =>
-        setDurationHours(event.target.value)
-      }
-      placeholder="0"
+    <WorkoutForm
+      onWorkoutCreated={handleWorkoutCreated}
+      onError={handleFormError}
     />
-  </label>
-
-  <label>
-    Minutes
-    <input
-      type="number"
-      min="0"
-      max="59"
-      value={durationMinutes}
-      onChange={(event) =>
-        setDurationMinutes(event.target.value)
-      }
-      placeholder="0"
-    />
-  </label>
-</div>
-
-        <label>
-          Notes
-          <textarea
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-          />
-        </label>
-
-        <button type="submit">
-          Create Workout
-        </button>
-      </form>
-    </section>
 
     {/* ERROR MESSAGE */}
     {error && <p>{error}</p>}
