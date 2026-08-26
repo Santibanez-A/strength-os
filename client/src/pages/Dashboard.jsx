@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import WorkoutCard from "../components/WorkoutCard";
 import WorkoutEntryCard from "../components/WorkoutEntryCard";
 import WorkoutForm from "../components/WorkoutForm";
+import WorkoutEntryForm from "../components/WorkoutEntryForm";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
@@ -9,14 +10,6 @@ function Dashboard({ user }) {
 
   const [exercises, setExercises] = useState([]);
   const [entries, setEntries] = useState([]);
-
-  const [selectedWorkoutId, setSelectedWorkoutId] = useState("");
-  const [selectedExerciseId, setSelectedExerciseId] = useState("");
-  const [weight, setWeight] = useState("");
-  const [sets, setSets] = useState("");
-  const [reps, setReps] = useState("");
-  const [rir, setRir] = useState("");
-
 
   useEffect(() => {
     fetch("/api/workouts", {
@@ -71,54 +64,6 @@ function Dashboard({ user }) {
     });
 }, []);  
 
-  function handleCreateEntry(event) {
-  event.preventDefault();
-  setError("");
-
-  fetch("/api/workout_entries", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      workout_id: Number(selectedWorkoutId),
-      exercise_id: Number(selectedExerciseId),
-      weight: Number(weight),
-      sets: Number(sets),
-      reps: Number(reps),
-      rir: rir === "" ? null : Number(rir),
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        return response.json().then((data) => {
-          throw new Error(
-            data.errors?.[0] ||
-              data.error ||
-              "Unable to add workout entry"
-          );
-        });
-      }
-
-      return response.json();
-    })
-    .then((newEntry) => {
-      setEntries((currentEntries) => [
-        ...currentEntries,
-        newEntry,
-      ]);
-
-      setSelectedExerciseId("");
-      setWeight("");
-      setSets("");
-      setReps("");
-      setRir("");
-    })
-    .catch((error) => {
-      setError(error.message);
-    });
-}
 function handleUpdateEntry(entry) {
   const newWeight = window.prompt(
     "Weight:",
@@ -307,6 +252,12 @@ function handleWorkoutCreated(newWorkout) {
 function handleFormError(message) {
   setError(message);
 }
+function handleEntryCreated(newEntry) {
+  setEntries((currentEntries) => [
+    ...currentEntries,
+    newEntry,
+  ]);
+}
 
 return (
   <main>
@@ -322,116 +273,13 @@ return (
     {/* ERROR MESSAGE */}
     {error && <p>{error}</p>}
 
-    {/* LOG EXERCISE */}
-    <section>
-      <h2>Log Exercise</h2>
-
-      <form onSubmit={handleCreateEntry}>
-        <label>
-          Workout
-          <select
-            value={selectedWorkoutId}
-            onChange={(event) =>
-              setSelectedWorkoutId(event.target.value)
-            }
-            required
-          >
-            <option value="">
-              Select workout
-            </option>
-
-            {workouts.map((workout) => (
-              <option
-                key={workout.id}
-                value={workout.id}
-              >
-                {workout.date} - {workout.notes}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          Exercise
-          <select
-            value={selectedExerciseId}
-            onChange={(event) =>
-              setSelectedExerciseId(event.target.value)
-            }
-            required
-          >
-            <option value="">
-              Select exercise
-            </option>
-
-            {exercises.map((exercise) => (
-              <option
-                key={exercise.id}
-                value={exercise.id}
-              >
-                {exercise.name}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label>
-          Weight
-          <input
-            type="number"
-            min="0"
-            value={weight}
-            onChange={(event) =>
-              setWeight(event.target.value)
-            }
-            required
-          />
-        </label>
-
-        <label>
-          Sets
-          <input
-            type="number"
-            min="1"
-            value={sets}
-            onChange={(event) =>
-              setSets(event.target.value)
-            }
-            required
-          />
-        </label>
-
-        <label>
-          Reps
-          <input
-            type="number"
-            min="0"
-            value={reps}
-            onChange={(event) =>
-              setReps(event.target.value)
-            }
-            required
-          />
-        </label>
-
-        <label>
-          RIR
-          <input
-            type="number"
-            min="0"
-            max="10"
-            value={rir}
-            onChange={(event) =>
-              setRir(event.target.value)
-            }
-          />
-        </label>
-
-        <button type="submit">
-          Add Exercise to Workout
-        </button>
-      </form>
-    </section>
+  {/* LOG EXERCISE */}
+  <WorkoutEntryForm
+    workouts={workouts}
+    exercises={exercises}
+    onEntryCreated={handleEntryCreated}
+    onError={handleFormError}
+  />
 
 {/* WORKOUT LIST */}
 <section>
