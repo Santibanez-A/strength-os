@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import WorkoutCard from "../components/WorkoutCard";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
@@ -521,42 +522,24 @@ return (
       </form>
     </section>
 
-    {/* WORKOUT LIST */}
-    <section>
-      <h2>Your Workouts</h2>
+{/* WORKOUT LIST */}
+<section>
+  <h2>Your Workouts</h2>
 
-      {workouts.length === 0 ? (
-        <p>No workouts yet.</p>
-      ) : (
-        workouts.map((workout) => (
-          <article key={workout.id}>
-            <h3>{workout.date}</h3>
-
-            <p>
-             Duration: {formatDuration(workout.duration_minutes)}
-            </p>
-
-            <p>{workout.notes}</p>
-
-            <button
-              onClick={() =>
-                handleUpdateWorkout(workout)
-              }
-            >
-              Edit
-            </button>
-
-            <button
-              onClick={() =>
-                handleDeleteWorkout(workout.id)
-              }
-            >
-              Delete
-            </button>
-          </article>
-        ))
-      )}
-    </section>
+  {workouts.length === 0 ? (
+    <p>No workouts yet.</p>
+  ) : (
+    workouts.map((workout) => (
+      <WorkoutCard
+        key={workout.id}
+        workout={workout}
+        formatDuration={formatDuration}
+        onUpdate={handleUpdateWorkout}
+        onDelete={handleDeleteWorkout}
+      />
+    ))
+  )}
+</section>
 
     {/* WORKOUT ENTRY LIST */}
     <section>
