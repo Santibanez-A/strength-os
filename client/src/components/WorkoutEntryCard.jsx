@@ -1,3 +1,5 @@
+import { calculateOneRepMax } from "../utils/oneRepMax";
+
 function WorkoutEntryCard({
   entry,
   exercises,
@@ -8,6 +10,11 @@ function WorkoutEntryCard({
     (exercise) =>
       exercise.id === entry.exercise_id
   );
+
+  const estimatedOneRepMax = calculateOneRepMax(
+  entry.weight,
+  entry.reps
+);
 
   return (
     <article>
@@ -20,6 +27,10 @@ function WorkoutEntryCard({
       <p>Sets: {entry.sets}</p>
       <p>Reps: {entry.reps}</p>
       <p>RIR: {entry.rir ?? "Not recorded"}</p>
+
+      {estimatedOneRepMax && (
+        <p>Estimated 1RM: {estimatedOneRepMax} lb</p>
+        )}
 
       <button onClick={() => onUpdate(entry)}>
         Edit Entry
