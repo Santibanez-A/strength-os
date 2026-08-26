@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import WorkoutCard from "../components/WorkoutCard";
+import WorkoutEntryCard from "../components/WorkoutEntryCard";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
@@ -548,34 +549,15 @@ return (
       {entries.length === 0 ? (
         <p>No exercises logged yet.</p>
       ) : (
-        entries.map((entry) => {
-          const exercise = exercises.find(
-            (exercise) =>
-              exercise.id === entry.exercise_id
-          );
-
-          return (
- <article key={entry.id}>
-  <h3>
-    {exercise?.name ||
-      `Exercise ${entry.exercise_id}`}
-  </h3>
-
-  <p>Weight: {entry.weight}</p>
-  <p>Sets: {entry.sets}</p>
-  <p>Reps: {entry.reps}</p>
-  <p>RIR: {entry.rir ?? "Not recorded"}</p>
-
-  <button onClick={() => handleUpdateEntry(entry)}>
-    Edit Entry
-  </button>
-
-  <button onClick={() => handleDeleteEntry(entry.id)}>
-    Delete Entry
-  </button>
-</article>
-          );
-        })
+        entries.map((entry) => (
+          <WorkoutEntryCard
+            key={entry.id}
+            entry={entry}
+            exercises={exercises}
+            onUpdate={handleUpdateEntry}
+            onDelete={handleDeleteEntry}
+          />
+        ))
       )}
     </section>
   </main>
