@@ -2,6 +2,7 @@ import { calculateOneRepMax } from "../utils/oneRepMax";
 
 function WorkoutEntryCard({
   entry,
+  entries,
   exercises,
   onUpdate,
   onDelete,
@@ -15,6 +16,31 @@ function WorkoutEntryCard({
   entry.weight,
   entry.reps
 );
+const sameExerciseEntries = entries.filter(
+  (otherEntry) =>
+    otherEntry.exercise_id === entry.exercise_id
+);
+
+const estimatedMaxes = sameExerciseEntries
+  .map((otherEntry) =>
+    calculateOneRepMax(
+      otherEntry.weight,
+      otherEntry.reps
+    )
+  )
+  .filter((max) => max !== null);
+
+const highestEstimatedMax =
+  estimatedMaxes.length > 0
+    ? Math.max(...estimatedMaxes)
+    : null;
+
+const isEstimatedPr =
+  estimatedOneRepMax !== null &&
+  estimatedOneRepMax === highestEstimatedMax;
+
+
+
 
   return (
     <article>
@@ -31,6 +57,9 @@ function WorkoutEntryCard({
       {estimatedOneRepMax && (
         <p>Estimated 1RM: {estimatedOneRepMax} lb</p>
         )}
+
+      {isEstimatedPr && (<p>Estimated PR</p>)}
+
 
       <button onClick={() => onUpdate(entry)}>
         Edit Entry

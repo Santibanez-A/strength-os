@@ -311,6 +311,7 @@ return (
           <WorkoutEntryCard
             key={entry.id}
             entry={entry}
+            entries={entries}
             exercises={exercises}
             onUpdate={handleUpdateEntry}
             onDelete={handleDeleteEntry}
