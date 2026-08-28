@@ -1,4 +1,7 @@
-import { calculateOneRepMax } from "../utils/oneRepMax";
+import {
+  calculateOneRepMax,
+  findBestEntry,
+} from "../utils/oneRepMax";
 
 function WorkoutEntryCard({
   entry,
@@ -16,31 +19,16 @@ function WorkoutEntryCard({
   entry.weight,
   entry.reps
 );
+
 const sameExerciseEntries = entries.filter(
   (otherEntry) =>
     otherEntry.exercise_id === entry.exercise_id
-);
+  );
 
-const estimatedMaxes = sameExerciseEntries
-  .map((otherEntry) =>
-    calculateOneRepMax(
-      otherEntry.weight,
-      otherEntry.reps
-    )
-  )
-  .filter((max) => max !== null);
+  const bestEntry = findBestEntry(sameExerciseEntries);
 
-const highestEstimatedMax =
-  estimatedMaxes.length > 0
-    ? Math.max(...estimatedMaxes)
-    : null;
-
-const isEstimatedPr =
-  estimatedOneRepMax !== null &&
-  estimatedOneRepMax === highestEstimatedMax;
-
-
-
+  const isEstimatedPr =
+  bestEntry?.entry?.id === entry.id;
 
   return (
     <article>

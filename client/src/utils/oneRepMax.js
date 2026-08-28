@@ -44,8 +44,31 @@ const wathan =
     oconner +
     wathan
   ) / 7;
+  return Math.round(average);
+}
+  
+export function findBestEntry(entries) {
+  const entriesWithMax = entries.map((entry) => ({
+    entry: entry,
+    estimatedMax: calculateOneRepMax(
+      entry.weight,
+      entry.reps
+    ),
+  }));
 
-return Math.round(average);
+  const bestEntry = entriesWithMax.reduce(
+    (best, current) => {
+      if (
+        !best ||
+        current.estimatedMax > best.estimatedMax
+      ) {
+        return current;
+      }
 
+      return best;
+    },
+    null
+  );
 
+  return bestEntry;
 }

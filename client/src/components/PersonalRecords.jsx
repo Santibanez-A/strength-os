@@ -1,4 +1,4 @@
-import { calculateOneRepMax } from "../utils/oneRepMax";
+import { findBestEntry } from "../utils/oneRepMax";
 
 function PersonalRecords({ entries, exercises }) {
 
@@ -6,26 +6,7 @@ function PersonalRecords({ entries, exercises }) {
     const exerciseEntries = entries.filter(
     (entry) => entry.exercise_id === exercise.id);
 
-    const entriesWithMax = exerciseEntries.map((entry) => ({
-    entry: entry,
-    estimatedMax: calculateOneRepMax(
-    entry.weight,
-    entry.reps),
-    }));
-
-    const bestEntry = entriesWithMax.reduce(
-    (best, current) => {
-    if (
-      !best ||
-      current.estimatedMax > best.estimatedMax
-    ) {
-      return current;
-    }
-
-        return best;
-    },
-    null
-    );
+    const bestEntry = findBestEntry(exerciseEntries);
 
     return {
     exercise: exercise,
