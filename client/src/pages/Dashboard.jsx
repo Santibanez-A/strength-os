@@ -4,6 +4,7 @@ import WorkoutEntryCard from "../components/WorkoutEntryCard";
 import WorkoutForm from "../components/WorkoutForm";
 import WorkoutEntryForm from "../components/WorkoutEntryForm";
 import PersonalRecords from "../components/PersonalRecords";
+import TrainingGuidance from "../components/TrainingGuidance";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
@@ -281,11 +282,16 @@ return (
     onEntryCreated={handleEntryCreated}
     onError={handleFormError}
   />
-  {/* Personal Records */}
+  {/* PERSONAL RECORDS */}
   <PersonalRecords
     entries={entries}
     exercises={exercises}
   />
+  {/* TRAINING GUIDANCE */}
+  <TrainingGuidance
+  entries={entries}
+  exercises={exercises}
+/>
 
 {/* WORKOUT LIST */}
 <section>
