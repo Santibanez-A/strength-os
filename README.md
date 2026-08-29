@@ -1,8 +1,10 @@
 # StrengthOS
 
-StrengthOS is a full-stack strength training application designed to help users log workouts, track individual exercises, and maintain a personal training history.
+StrengthOS is a full-stack strength training application designed to help users log workouts, track exercises, monitor personal records, estimate strength levels, and receive percentage-based training guidance.
 
-The application focuses on simple and practical workout tracking. Users can create workout sessions, record exercises performed during those sessions, track weight, sets, reps, and Reps in Reserve (RIR), and update or remove their training data as needed.
+The application focuses on practical workout tracking and strength progression. Users can create workout sessions, record exercises performed during those sessions, track weight, sets, reps, and Reps in Reserve (RIR), and update or remove their training data as needed.
+
+StrengthOS also analyzes logged training data to calculate estimated one-rep maxes, identify estimated personal records, and generate training weights based on a user's current estimated strength.
 
 StrengthOS was built as a full-stack software engineering project using a React frontend, Flask backend, SQLAlchemy ORM, and a relational database.
 
@@ -12,6 +14,7 @@ StrengthOS was built as a full-stack software engineering project using a React 
 - Protected user-specific workout data
 - Create, read, update, and delete workouts
 - Create, read, update, and delete workout entries
+- Create custom exercises
 - Associate exercises with individual workouts
 - Track:
   - Exercise
@@ -19,9 +22,17 @@ StrengthOS was built as a full-stack software engineering project using a React 
   - Sets
   - Reps
   - Reps in Reserve (RIR)
+- Optional RIR logging
 - Enter workout duration using hours and minutes
 - Human-readable workout duration display
 - Persistent workout history
+- Estimated one-rep max (1RM) calculations
+- Estimated personal record detection
+- Personal Records dashboard
+- Percentage-based training guidance
+- Training weights calculated from 60% through 90% of estimated 1RM
+- Validation for invalid weight, set, and rep values
+- High-repetition sets above 20 reps excluded from estimated 1RM and PR calculations
 - User ownership protection so users only access their own workout data
 - Responsive military-inspired interface
 - Black, OD green, and tan StrengthOS visual theme
@@ -36,6 +47,24 @@ StrengthOS was built as a full-stack software engineering project using a React 
 - Vite
 - CSS
 
+### Backend
+
+- Python
+- Flask
+- Flask-SQLAlchemy
+- Flask-Migrate
+- Flask-Bcrypt
+- Flask-CORS
+- Marshmallow
+- Marshmallow-SQLAlchemy
+- python-dotenv
+
+### Database
+
+- SQL relational database
+- SQLAlchemy ORM
+- Flask-Migrate for database migrations
+
 ### Environment Variables
 
 Create a `.env` file in the project root and configure:
@@ -47,32 +76,27 @@ SECRET_KEY=your_secret_key
 
 These values are loaded using `python-dotenv` and used by the Flask application for the database connection and session security.
 
-### Backend
-
-- Python
-- Flask
-- Flask-SQLAlchemy
-- Flask-Migrate
-- Flask-Bcrypt
-- Flask-CORS
-- Marshmellow
-- Marshmellow-SQLAlchemy
-- python-dotenv
-### Database
-
-- SQL relational database
-- SQLAlchemy ORM
-- Flask-Migrate for database migrations
-
 ## Application Structure
 
 StrengthOS uses a React frontend that communicates with a Flask REST API.
 
 The general application flow is:
 
-User → React Interface → Flask API → SQLAlchemy → Database
+```text
+User
+  ↓
+React Interface
+  ↓
+Flask REST API
+  ↓
+SQLAlchemy ORM
+  ↓
+Relational Database
+```
 
 Vite is configured with a development proxy so frontend requests to `/api` are forwarded to the Flask server.
+
+The React frontend is divided into reusable components responsible for workout creation, exercise creation, workout entry logging, workout display, personal records, and training guidance.
 
 ## Data Relationships
 
@@ -84,7 +108,7 @@ A user owns workouts and authenticated application data.
 
 ### Workout
 
-A workout represents an individual training session and includes information such as:
+A workout represents an individual training session and includes:
 
 - Date
 - Duration
@@ -94,13 +118,13 @@ Each workout belongs to a user.
 
 ### Exercise
 
-An exercise represents a movement that can be performed during a workout, such as Bench Press or Back Squat.
+An exercise represents a movement that can be performed during a workout, such as Bench Press or Back Squat. Users can also add custom exercises to the exercise library.
 
 ### Workout Entry
 
-A workout entry connects a workout with an exercise and stores the performance data for that exercise.
+A workout entry connects a workout with an exercise and stores performance data for that exercise.
 
-Workout entries can include:
+Workout entries include:
 
 - Weight
 - Sets
@@ -109,11 +133,50 @@ Workout entries can include:
 
 This creates the relationship:
 
-User → Workouts → Workout Entries → Exercises
+```text
+User
+  ↓
+Workouts
+  ↓
+Workout Entries
+  ↓
+Exercises
+```
+
+## Strength Analysis
+
+### Estimated One-Rep Max
+
+StrengthOS calculates an estimated one-rep max from logged weight and repetitions.
+
+Rather than relying on a single estimation method, the application calculates multiple established 1RM formulas and averages their results to provide a single estimated maximum.
+
+High-repetition sets above 20 reps are excluded from estimated 1RM calculations because 1RM formulas become less useful at high repetition ranges.
+
+### Personal Records
+
+StrengthOS compares estimated 1RM values for entries belonging to the same exercise.
+
+The entry with the highest valid estimated 1RM is identified as the user's current estimated personal record and receives a PR indicator in the workout entry interface.
+
+Personal Records automatically update when workout entries are created, edited, or deleted.
+
+### Training Guidance
+
+StrengthOS uses the current estimated personal record for an exercise to calculate suggested training weights.
+
+Training guidance is provided at:
+
+- 60%
+- 70%
+- 75%
+- 80%
+- 85%
+- 90%
+
+Users can select an exercise from the Training Guidance section to view percentage-based weights derived from their current estimated 1RM.
 
 ## CRUD Functionality
-
-StrengthOS provides full CRUD functionality for its primary training resources.
 
 ### Workouts
 
@@ -133,11 +196,15 @@ Users can:
 - Edit exercise performance data
 - Delete workout entries
 
+### Exercises
+
+Users can create custom exercises that can immediately be selected when logging workout entries.
+
 ## Authentication and Authorization
 
-StrengthOS uses session-based authentication.
+StrengthOS uses Flask session-based authentication.
 
-StrengthOS uses Flask session-based authentication. After a successful login, Flask stores the authenticated user's ID in the session. React includes the session cookie with protected API requests.
+After a successful login, Flask stores the authenticated user's ID in the session. React includes the session cookie with protected API requests.
 
 Protected backend routes verify the authenticated user's identity before allowing access to private resources.
 
@@ -152,7 +219,7 @@ From the project directory:
 ```bash
 pipenv shell
 cd server
-python app.py
+flask run --port 5555
 ```
 
 The Flask API runs on port `5555`.
@@ -222,23 +289,23 @@ StrengthOS uses a military-inspired visual identity built around:
 - OD green primary elements
 - Tan highlights
 - High-contrast workout cards
-- Responsive layouts for different screen sizes
+- PR crosshair indicators
+- Responsive layouts for desktop and mobile devices
 
-The goal is to provide a functional training interface with a visual identity that feels appropriate for strength and performance tracking.
+The goal is to provide a functional strength-training interface with a visual identity appropriate for strength and performance tracking.
 
 ## Future Improvements
 
 Potential future features include:
 
-- Estimated one-rep max calculations
-- Percentage-based training recommendations
-- Personal record tracking
 - Exercise progress history
-- Strength charts
+- Strength progression charts
 - User profiles
 - Leaderboards
 - Social features
 - Training programs and progression cycles
+- Historical PR tracking
+- More advanced strength analytics
 
 ## Author
 
