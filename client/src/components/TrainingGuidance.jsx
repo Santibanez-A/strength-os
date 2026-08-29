@@ -1,8 +1,12 @@
 import { findBestEntry } from "../utils/oneRepMax";
 import { createTrainingGuidance } from "../utils/trainingGuidance";
+import { useState } from "react";
 
 
 function TrainingGuidance({ entries, exercises }) {
+
+  const [selectedExerciseId, setSelectedExerciseId] = useState("");
+
   const guidance = exercises.map((exercise) => {
     const exerciseEntries = entries.filter(
       (entry) => entry.exercise_id === exercise.id
@@ -21,29 +25,55 @@ function TrainingGuidance({ entries, exercises }) {
     };
 });
 
+const selectedGuidance = guidance.find(
+  (item) =>
+    String(item.exercise.id) === selectedExerciseId
+  );
+
   return (
     <section>
       <h2>Training Guidance</h2>
 
-    {guidance
+      <select value={selectedExerciseId}
+        onChange={(event) =>
+        setSelectedExerciseId(event.target.value)
+        }>
+
+      <option value="">Select an exercise</option>
+
+      {guidance
         .filter((item) => item.trainingWeights.length > 0)
         .map((item) => (
-    <div key={item.exercise.id}>
-      <h3>{item.exercise.name}</h3>
+        <option
+          key={item.exercise.id}
+          value={item.exercise.id} >
+          {item.exercise.name}
+        </option>
+
+        ))}
+      </select>
+
+      {selectedGuidance && (
+      <article>
+      <h3>{selectedGuidance.exercise.name}</h3>
 
       <p>
-        Estimated 1RM: {item.estimatedMax} lb
+      Estimated 1RM: {selectedGuidance.estimatedMax} lb
       </p>
-
-      {item.trainingWeights.map((trainingWeight) => (
-        <p key={trainingWeight.percentage}>
-          {trainingWeight.percentage}%:{" "}
-          {trainingWeight.weight} lb
-        </p>
+        
+    <div className="training-percentages">
+      {selectedGuidance.trainingWeights.map((trainingWeight) => (
+      <div
+      className="training-percentage"
+      key={trainingWeight.percentage}
+      >
+      <span>{trainingWeight.percentage}%</span>
+      <strong>{trainingWeight.weight} lb</strong>
+      </div>
       ))}
     </div>
-  ))}
-
+      </article>
+    )}
     </section>
   );
 }

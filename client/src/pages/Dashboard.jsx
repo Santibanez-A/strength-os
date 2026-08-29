@@ -5,6 +5,7 @@ import WorkoutForm from "../components/WorkoutForm";
 import WorkoutEntryForm from "../components/WorkoutEntryForm";
 import PersonalRecords from "../components/PersonalRecords";
 import TrainingGuidance from "../components/TrainingGuidance";
+import ExerciseForm from "../components/ExerciseForm";
 
 function Dashboard({ user }) {
   const [workouts, setWorkouts] = useState([]);
@@ -260,6 +261,12 @@ function handleEntryCreated(newEntry) {
     newEntry,
   ]);
 }
+function handleExerciseCreated(newExercise) {
+  setExercises((currentExercises) => [
+    ...currentExercises,
+    newExercise,
+  ]);
+}
 
 return (
   <main>
@@ -274,6 +281,12 @@ return (
 
     {/* ERROR MESSAGE */}
     {error && <p>{error}</p>}
+    
+    {/* CREATE EXERCISE */}
+    <ExerciseForm
+      onExerciseCreated={handleExerciseCreated}
+      onError={handleFormError}
+    />
 
   {/* LOG EXERCISE */}
   <WorkoutEntryForm

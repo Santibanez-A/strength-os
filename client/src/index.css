@@ -415,6 +415,53 @@ article p {
   font-size: 0.93rem;
 }
 
+.personal-records-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(240px, 1fr)
+  );
+  gap: 16px;
+  margin: 22px;
+}
+
+.personal-records-grid article {
+  margin: 0;
+}
+
+/* ================================
+   TRAINING GUIDANCE
+   ================================ */
+
+.training-percentages {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.training-percentage {
+  padding: 12px 8px;
+  text-align: center;
+  background: var(--charcoal);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.training-percentage span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.training-percentage strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--tan-light);
+  font-size: 1rem;
+}
+
 /* ================================
    EDIT / DELETE BUTTONS
    ================================ */
@@ -543,5 +590,8 @@ main > p:not(:first-of-type) {
   section > article {
     margin-left: 16px;
     margin-right: 16px;
+  }
+  .training-percentages {
+  grid-template-columns: repeat(2, 1fr);
   }
 }
