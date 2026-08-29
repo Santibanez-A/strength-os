@@ -31,7 +31,7 @@ const sameExerciseEntries = entries.filter(
   bestEntry?.entry?.id === entry.id;
 
   return (
-    <article>
+    <article className="workout-entry-card">
       <h3>
         {exercise?.name ||
           `Exercise ${entry.exercise_id}`}
@@ -47,13 +47,12 @@ const sameExerciseEntries = entries.filter(
     )}
 
     {isEstimatedPr && (
-      <div className="pr-badge-row">
-        <span className="pr-badge"
-        title="Estimated Personal Record"
-        >
-          <span className="pr-badge-text">PR</span>
-        </span>
-      </div>
+      <span
+        className="pr-badge"
+        title="Estimated Personal Record">
+          
+      <span className="pr-badge-text">PR</span>
+      </span>
     )}
 
     <button onClick={() => onUpdate(entry)}>

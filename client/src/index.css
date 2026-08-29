@@ -480,6 +480,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   filter: invert(1);
   cursor: pointer;
 }
+.workout-entry-card h3 {
+  padding-right: 80px;
+}
 
 
 /* ================================
