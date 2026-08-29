@@ -43,19 +43,26 @@ const sameExerciseEntries = entries.filter(
       <p>RIR: {entry.rir ?? "Not recorded"}</p>
 
       {estimatedOneRepMax && (
-        <p>Estimated 1RM: {estimatedOneRepMax} lb</p>
-        )}
+      <p>Estimated 1RM: {estimatedOneRepMax} lb</p>
+    )}
 
-      {isEstimatedPr && (<p>Estimated PR</p>)}
+    {isEstimatedPr && (
+      <div className="pr-badge-row">
+        <span className="pr-badge"
+        title="Estimated Personal Record"
+        >
+          <span className="pr-badge-text">PR</span>
+        </span>
+      </div>
+    )}
 
+    <button onClick={() => onUpdate(entry)}>
+      Edit Entry
+    </button>
 
-      <button onClick={() => onUpdate(entry)}>
-        Edit Entry
-      </button>
-
-      <button onClick={() => onDelete(entry.id)}>
-        Delete Entry
-      </button>
+    <button onClick={() => onDelete(entry.id)}>
+      Delete Entry
+    </button>
     </article>
   );
 }

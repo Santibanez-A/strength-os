@@ -428,6 +428,55 @@ article p {
 .personal-records-grid article {
   margin: 0;
 }
+.pr-badge {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 54px;
+  height: 54px;
+
+  color: var(--tan-light);
+  background: var(--od-green-dark);
+
+  border: 2px solid var(--tan);
+  border-radius: 50%;
+}
+
+.pr-badge::before {
+  content: "";
+  position: absolute;
+
+  width: 66px;
+  height: 2px;
+
+  background: var(--tan-dark);
+}
+
+.pr-badge::after {
+  content: "";
+  position: absolute;
+
+  width: 2px;
+  height: 66px;
+
+  background: var(--tan-dark);
+}
+
+.pr-badge-text {
+  position: relative;
+  z-index: 1;
+
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
 
 /* ================================
    TRAINING GUIDANCE
