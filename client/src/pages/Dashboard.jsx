@@ -68,6 +68,7 @@ function Dashboard({ user }) {
 }, []);  
 
 function handleUpdateEntry(entry) {
+  setError("");
   const newWeight = window.prompt(
     "Weight:",
     entry.weight
@@ -96,6 +97,26 @@ function handleUpdateEntry(entry) {
 
   if (newRir === null) return;
 
+  const weight = Number(newWeight);
+  const sets = Number(newSets);
+  const reps = Number(newReps);
+
+  if (weight <= 0) {
+    setError("Weight must be greater than 0.");
+    return;
+  }
+
+  if (sets <= 0) {
+    setError("Sets must be greater than 0.");
+    return;
+  }
+
+  if (reps <= 0) {
+    setError("Reps must be greater than 0.");
+    return;
+  }
+
+
   fetch(`/api/workout_entries/${entry.id}`, {
     method: "PATCH",
     headers: {
@@ -103,9 +124,9 @@ function handleUpdateEntry(entry) {
     },
     credentials: "include",
     body: JSON.stringify({
-      weight: Number(newWeight),
-      sets: Number(newSets),
-      reps: Number(newReps),
+      weight: weight,
+      sets: sets,
+      reps: reps,
       rir: newRir === "" ? null : Number(newRir),
     }),
   })
@@ -281,39 +302,39 @@ return (
 
     {/* ERROR MESSAGE */}
     {error && <p>{error}</p>}
-    
+
     {/* CREATE EXERCISE */}
     <ExerciseForm
       onExerciseCreated={handleExerciseCreated}
       onError={handleFormError}
     />
 
-  {/* LOG EXERCISE */}
-  <WorkoutEntryForm
-    workouts={workouts}
-    exercises={exercises}
-    onEntryCreated={handleEntryCreated}
-    onError={handleFormError}
-  />
-  {/* PERSONAL RECORDS */}
-  <PersonalRecords
-    entries={entries}
-    exercises={exercises}
-  />
-  {/* TRAINING GUIDANCE */}
-  <TrainingGuidance
-  entries={entries}
-  exercises={exercises}
-/>
+    {/* LOG EXERCISE */}
+    <WorkoutEntryForm
+      workouts={workouts}
+      exercises={exercises}
+      onEntryCreated={handleEntryCreated}
+      onError={handleFormError}
+    />
+    {/* PERSONAL RECORDS */}
+    <PersonalRecords
+      entries={entries}
+      exercises={exercises}
+    />
+    {/* TRAINING GUIDANCE */}
+    <TrainingGuidance
+      entries={entries}
+      exercises={exercises}
+    />
 
-{/* WORKOUT LIST */}
-<section>
-  <h2>Your Workouts</h2>
+    {/* WORKOUT LIST */}
+    <section>
+    <h2>Your Workouts</h2>
 
-  {workouts.length === 0 ? (
-    <p>No workouts yet.</p>
-  ) : (
-    workouts.map((workout) => (
+    {workouts.length === 0 ? (
+      <p>No workouts yet.</p>
+      ) : (
+      workouts.map((workout) => (
       <WorkoutCard
         key={workout.id}
         workout={workout}
@@ -321,9 +342,9 @@ return (
         onUpdate={handleUpdateWorkout}
         onDelete={handleDeleteWorkout}
       />
-    ))
-  )}
-</section>
+      ))
+    )}
+    </section>
 
     {/* WORKOUT ENTRY LIST */}
     <section>

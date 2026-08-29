@@ -476,6 +476,10 @@ article p {
   line-height: 1;
   letter-spacing: 1px;
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
 
 
 /* ================================

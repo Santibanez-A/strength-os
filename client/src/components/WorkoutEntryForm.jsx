@@ -17,6 +17,21 @@ function WorkoutEntryForm({
   event.preventDefault();
   onError("");
 
+  if (Number(weight) <= 0) {
+  onError("Weight must be greater than 0.");
+  return;
+  }
+
+  if (Number(reps) <= 0) {
+  onError("Reps must be greater than 0.");
+  return;
+  }
+
+  if (Number(sets) <= 0) {
+  onError("Sets must be greater than 0.");
+  return;
+  }
+
   fetch("/api/workout_entries", {
     method: "POST",
     headers: {

@@ -2,8 +2,12 @@ export function calculateOneRepMax(weight, reps) {
   const liftedWeight = Number(weight);
   const repetitions = Number(reps);
 
-  if (!liftedWeight || !repetitions) {
-    return null;
+  if (
+  liftedWeight <= 0 ||
+  repetitions <= 0 ||
+  repetitions > 20
+  ) {
+  return null;
   }
 
   if (repetitions === 1) {
@@ -48,13 +52,15 @@ const wathan =
 }
   
 export function findBestEntry(entries) {
-  const entriesWithMax = entries.map((entry) => ({
+const entriesWithMax = entries
+  .map((entry) => ({
     entry: entry,
     estimatedMax: calculateOneRepMax(
       entry.weight,
       entry.reps
     ),
-  }));
+  }))
+  .filter((item) => item.estimatedMax !== null);
 
   const bestEntry = entriesWithMax.reduce(
     (best, current) => {
