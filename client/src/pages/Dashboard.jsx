@@ -227,7 +227,7 @@ function handleUpdateWorkout(workout) {
 
 function handleDeleteWorkout(id) {
   const confirmed = window.confirm(
-    "Are you sure you want to delete this workout?"
+    "Delete this workout? This will also permanently delete all logged exercise entries and PR data associated with this workout."
   );
 
   if (!confirmed) return;

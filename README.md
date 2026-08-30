@@ -243,32 +243,31 @@ http://localhost:5173
 ## API Routes
 
 ### Authentication
-
-```text
-POST   /signup
-POST   /login
-DELETE /logout
-GET    /check_session
-```
+- POST `/api/signup`
+- POST `/api/login`
+- GET `/api/check_session`
+- DELETE `/api/logout`
 
 ### Workouts
+- GET `/api/workouts`
+- POST `/api/workouts`
+- GET `/api/workouts/<id>`
+- PATCH `/api/workouts/<id>`
+- DELETE `/api/workouts/<id>`
 
-```text
-GET    /workouts
-GET    /workouts/:id
-POST   /workouts
-PATCH  /workouts/:id
-DELETE /workouts/:id
-```
+### Workout Entries
+- GET `/api/workout_entries`
+- GET `/api/workout_entries/<id>`
+- POST `/api/workout_entries`
+- PATCH `/api/workout_entries/<id>`
+- DELETE `/api/workout_entries/<id>`
 
 ### Exercises
-
-```text
-GET    /exercises
-GET    /exercises/:id
-POST   /exercises
-PATCH  /exercises/:id
-DELETE /exercises/:id
+- GET `/api/exercises`
+- GET `/api/exercises/<id>`
+- POST `/api/exercises`
+- PATCH `/api/exercises/<id>`
+- DELETE `/api/exercises/<id>`
 ```
 
 ### Workout Entries

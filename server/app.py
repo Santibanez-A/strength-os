@@ -36,7 +36,7 @@ def get_current_user():
     return User.query.get(user_id)
 
 
-@app.post("/signup")
+@app.post("/api/signup")
 def signup():
     data = request.get_json() or {}
 
@@ -66,7 +66,7 @@ def signup():
             "errors": [str(error)]
         }, 422
 
-@app.get("/check_session")
+@app.get("/api/check_session")
 def check_session():
     user_id = session.get("user_id")
 
@@ -83,7 +83,7 @@ def check_session():
     return {"error": "Unauthorized"}, 401
 
 
-@app.post("/login")
+@app.post("/api/login")
 def login():
     data = request.get_json() or {}
 
@@ -103,7 +103,7 @@ def login():
     return {"error": "Unauthorized"}, 401
 
 
-@app.delete("/logout")
+@app.delete("/api/logout")
 def logout():
     user_id = session.get("user_id")
 
@@ -114,7 +114,7 @@ def logout():
     return {"error": "Unauthorized"}, 401
 
 
-@app.get("/workouts")
+@app.get("/api/workouts")
 def get_workouts():
     user = get_current_user()
 
@@ -151,7 +151,7 @@ def get_workouts():
         "pages": pagination.pages
     }, 200
 
-@app.post("/workouts")
+@app.post("/api/workouts")
 def create_workout():
     user = get_current_user()
 
@@ -186,7 +186,7 @@ def create_workout():
             "errors": [str(error)]
         }, 422
 
-@app.get("/workouts/<int:id>")
+@app.get("/api/workouts/<int:id>")
 def get_workout_by_id(id):
     user = get_current_user()
 
@@ -210,7 +210,7 @@ def get_workout_by_id(id):
     }, 200
 
 
-@app.patch("/workouts/<int:id>")
+@app.patch("/api/workouts/<int:id>")
 def update_workout(id):
     user = get_current_user()
 
@@ -255,7 +255,7 @@ def update_workout(id):
         }, 422
 
 
-@app.delete("/workouts/<int:id>")
+@app.delete("/api/workouts/<int:id>")
 def delete_workout(id):
     user = get_current_user()
 
@@ -275,7 +275,7 @@ def delete_workout(id):
 
     return "", 204   
 
-@app.get("/workout_entries")
+@app.get("/api/workout_entries")
 def get_workout_entries():
     user = get_current_user()
 
@@ -303,7 +303,7 @@ def get_workout_entries():
     ], 200
 
 
-@app.get("/workout_entries/<int:id>")
+@app.get("/api/workout_entries/<int:id>")
 def get_workout_entry_by_id(id):
     user = get_current_user()
 
@@ -333,7 +333,7 @@ def get_workout_entry_by_id(id):
         "rir": entry.rir
     }, 200
 
-@app.post("/workout_entries")
+@app.post("/api/workout_entries")
 def create_workout_entry():
     user = get_current_user()
 
@@ -385,7 +385,7 @@ def create_workout_entry():
 
         return {"errors": [str(error)]}, 422
 
-@app.patch("/workout_entries/<int:id>")
+@app.patch("/api/workout_entries/<int:id>")
 def update_workout_entry(id):
     user = get_current_user()
 
@@ -444,7 +444,7 @@ def update_workout_entry(id):
         db.session.rollback()
         return {"errors": [str(error)]}, 422
 
-@app.delete("/workout_entries/<int:id>")
+@app.delete("/api/workout_entries/<int:id>")
 def delete_workout_entry(id):
     user = get_current_user()
 
@@ -470,7 +470,7 @@ def delete_workout_entry(id):
     return "", 204
 
 
-@app.get("/exercises")
+@app.get("/api/exercises")
 def get_exercises():
     exercises = Exercise.query.order_by(Exercise.name).all()
 
@@ -483,7 +483,7 @@ def get_exercises():
         for exercise in exercises
     ], 200
 
-@app.get("/exercises/<int:id>")
+@app.get("/api/exercises/<int:id>")
 def get_exercise_by_id(id):
     exercise = db.session.get(Exercise, id)
 
@@ -497,7 +497,7 @@ def get_exercise_by_id(id):
     }, 200
 
 
-@app.post("/exercises")
+@app.post("/api/exercises")
 def create_exercise():
     user = get_current_user()
 
@@ -528,7 +528,7 @@ def create_exercise():
             "errors": [str(error)]
         }, 422
 
-@app.patch("/exercises/<int:id>")
+@app.patch("/api/exercises/<int:id>")
 def update_exercise(id):
     user = get_current_user()
 
@@ -564,7 +564,7 @@ def update_exercise(id):
             "errors": [str(error)]
         }, 422
 
-@app.delete("/exercises/<int:id>")
+@app.delete("/api/exercises/<int:id>")
 def delete_exercise(id):
     user = get_current_user()
 
